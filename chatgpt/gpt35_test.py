@@ -17,7 +17,7 @@ class ChatGPT:
         response = openai.ChatCompletion.create(
             model='gpt-3.5-turbo',
             messages=[
-                {'role': 'user', 'content': 'please write the code how to request api of openai by using python3!'}
+                {'role': 'user', 'content': 'please write the code how to request api of openai gpt3.5 model by using python3!'}
             ]
         )
 
