@@ -152,7 +152,7 @@ libs/dbcon/mayo.csv
 libs/dap/api_src/A_SECRET.py
 *.csv
 *.json
-hira/*
+*downloads/*
 *.pem
 libs/gcdp/test.xlsx
 *.cfg
