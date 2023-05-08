@@ -7,7 +7,7 @@ from starlette.responses import FileResponse
 import json
 
 # Initialize OpenAI API credentials
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# openai.api_key = os.getenv("OPENAI_API_KEY")
 
 # Initialize FastAPI app
 app = FastAPI()
@@ -28,17 +28,17 @@ async def chat(query: str = Form(...)):
         json_contents = json.loads(jp.read())
     openai.api_key = json_contents['chatgpt_apikey']
     response = openai.ChatCompletion.create(
-        engine="gpt-3.5-turbo",
-        prompt=f"Conversation with the chatbot:\n\nUser: {query}\nBot:",
-        temperature=0.7,
+        model="gpt-3.5-turbo",
+        messages=[  # Change this
+            {"role": "assistant", "content": f"Conversation with the chatbot:\n\nUser: {query}\nBot:"}
+        ],
         max_tokens=150,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
+        n=1,
+        temperature=0.5,
     )
 
     # Extract text from OpenAI API response
-    message = response.choices[0].text.strip()
+    message = response['choices'][0]['message']['content']
 
     # Return chatbot response
     return HTMLResponse(content=f"<html><body><p>Chatbot: {message}</p></body></html>")
