@@ -156,3 +156,4 @@ libs/dap/api_src/A_SECRET.py
 *.pem
 libs/gcdp/test.xlsx
 *.cfg
+*.jsonl
