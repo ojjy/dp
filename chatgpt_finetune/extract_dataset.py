@@ -3,29 +3,31 @@ import os
 import pandas as pd
 import csv
 import json
+from sqlalchemy import create_engine
 
 project_path = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir))
 
 with open(f"{project_path}/secret.json", "r", encoding='utf-8') as fp:
     json_contents=json.loads(fp.read())
 
-snowflake_conn = snowflake.connector.connect(
-    user=json_contents['sf_user'],
-    password=json_contents['sf_pwd'],
-    account=json_contents['sf_host'],
-    warehouse=json_contents['sf_wh'],
-    database=json_contents['sf_db'],
-    schema=json_contents['sf_schema'],
-    cache_column_metadata=True
-)
+
+snowflake_conn = create_engine(f'snowflake://{json_contents["sf_user"]}:{json_contents["sf_pwd"]}@{json_contents["sf_host"]}/{json_contents["sf_db"]}/'
+                       f'{json_contents["sf_schema"]}?warehouse={json_contents["sf_wh"]}&role={json_contents["sf_role"]}')
+
+# snowflake_conn = snowflake.connector.connect(
+#     user=json_contents['sf_user'],
+#     password=json_contents['sf_pwd'],
+#     account=json_contents['sf_host'],
+#     warehouse=json_contents['sf_wh'],
+#     database=json_contents['sf_db'],
+#     schema=json_contents['sf_schema'],
+#     cache_column_metadata=True
+# )
 
 df = pd.read_sql_query(
     sql=f"SELECT CNSL_CNTN, DIPS_CNTN FROM {json_contents['sf_db']}.ODS.O_CS_CNSL_HST;",
     con=snowflake_conn)
 df = df.rename(columns={'CNSL_CNTN':'prompt', 'DIPS_CNTN':'completion'})
-# df['CNSL_CNTN'] = df['CNSL_CNTN'].rename
-# df['DIPS_CNTN'] = df['DIPS_CNTN'].apply(lambda x: f'"completion": "{x}"')
-# print(df)
 df.to_csv("input.csv", index=False, encoding='utf-8-sig')
 
 
