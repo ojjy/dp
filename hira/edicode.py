@@ -53,4 +53,4 @@ for word in edicode_arr:
         result.append(word)
 df = pd.DataFrame(result, columns=['edicode'])
 csv_download_path = os.path.join(project_path, "csv_file")
-df.to_csv(f"{os.path.join(csv_download_path, 'csv_file/edicode_D.csv')}", index=False)
+df.to_csv(f"{os.path.join(csv_download_path, 'edicode_D.csv')}", index=False)
